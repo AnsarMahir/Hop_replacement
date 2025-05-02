@@ -21,11 +21,5 @@ attributes:
   - id: 1
     name: "done"
     row: 19
-  - id: 2
-    row: 20
-  - id: 3
-    row: 21
-  - id: 78
-    row: 61
 
   # Add more attributes as needed
