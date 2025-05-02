@@ -1,0 +1,31 @@
+# Database connection settings
+#Change this file name to "config.yaml" before running the script
+database:
+  host: localhost
+  port: 5432
+  database: irr_hnb
+  table: sme_corporate_customer_financial_source_data
+  user: postgres
+  password: postgres@123
+
+#Specify the sheet name to be used
+sheet_name: "Company Financial Input"
+
+#Specify the years row (Specify as Actual row number -2)
+year_row: 9
+
+# Define attributes to extract
+# id: unique identifier for the attribute (Saved as att_id in the database)
+# name: attribute name to be appear in database (Saved under att_name) 
+attributes:
+  - id: 1
+    name: "done"
+    row: 19
+  - id: 2
+    row: 20
+  - id: 3
+    row: 21
+  - id: 78
+    row: 61
+
+  # Add more attributes as needed
