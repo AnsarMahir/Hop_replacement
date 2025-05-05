@@ -1,3 +1,4 @@
 *.xls
 *.xlsx
 *.log
+__pycache__
