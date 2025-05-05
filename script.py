@@ -106,27 +106,35 @@ class ExcelProcessor:
         
         # Extract years and account types
         year_row_index = self.config.get("year_row", None)
-        year_row = self.df.iloc[year_row_index]
-        account_type_row = self.df.loc[self.df.iloc[:, 0] == "Type of accounts (Audited or Management)"]
+        year_row = self.df.iloc[year_row_index] if year_row_index is not None else None
+        
+        # Handle account type row - from config or fallback search
+        account_type_row_index = self.config.get("account_type_row", None)
+        if account_type_row_index is not None:
+            account_type_row = self.df.iloc[account_type_row_index]
+        else:
+            matched_rows = self.df.loc[self.df.iloc[:, 0] == "Type of accounts (Audited or Management)"]
+            account_type_row = matched_rows.iloc[0] if not matched_rows.empty else None
         
         metadata['years'] = {}
-        if not year_row.empty:
-            # Start from column 3 where the yearly data begins
+        if year_row is not None:
+            # Start from column 1 where the yearly data begins
             for col in range(1, min(11, len(year_row))):
-                year_val = year_row[col]
-                if pd.notna(year_val):
-                    # Extract year from date string
-                    try:
+                try:
+                    year_val = year_row.iloc[col]  # Use iloc to access by position
+                    if pd.notna(year_val):
+                        # Extract year from date string
                         year = int(year_val)
                         acc_type = None
-
-                        if not account_type_row.empty:
-                            acc_raw = account_type_row.iloc[0, col]
+                        
+                        if account_type_row is not None:
+                            acc_raw = account_type_row.iloc[col] if col < len(account_type_row) else None
                             if pd.notna(acc_raw):
                                 acc_type = "audited" if "Audit" in str(acc_raw) else "managed"
+                        
                         metadata['years'][col] = {'year': year, 'acc_type': acc_type, 'year_id': col - 1}
-                    except Exception as e:
-                        logger.warning(f"Couldn't parse year from {year_val}: {e}")
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Couldn't parse year from {year_val}: {e}")
         
         logger.info(f"Extracted metadata: {metadata}")
         return metadata
