@@ -13,6 +13,7 @@ sheet_name: "Company Financial Input"
 
 #Specify the years row (Specify as Actual row number -2)
 year_row: 9
+account_type_row: 13
 
 # Define attributes to extract
 # id: unique identifier for the attribute (Saved as att_id in the database)
